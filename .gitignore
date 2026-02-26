@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# IDE / Editor
+.idea/
+*.swp
+*.swo
+
+# Logs and temp
+*.log
+.cache/
