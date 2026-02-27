@@ -16,6 +16,11 @@ jobs:
           cache-dependency-path: ai-workbench/package-lock.json
       - name: Verify build
         working-directory: ai-workbench
+        env:
+          DATABASE_URL: file:./dev.db
+          AUTH_SECRET: dummy-secret-for-build
+          NEXTAUTH_URL: http://localhost:3000
+          OPENROUTER_API_KEY: dummy
         run: |
           npm ci
           npm run build
