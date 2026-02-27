@@ -16,8 +16,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install yt-dlp, ffmpeg, and sqlite3 CLI
-RUN apk add --no-cache python3 py3-pip ffmpeg sqlite && \
+# Install yt-dlp, ffmpeg, sqlite3 CLI, and openssl (required by Prisma)
+RUN apk add --no-cache python3 py3-pip ffmpeg sqlite openssl && \
     pip3 install --break-system-packages yt-dlp
 
 # Copy standalone build output
