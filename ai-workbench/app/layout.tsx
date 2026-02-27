@@ -4,6 +4,7 @@ import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { HistoryProvider } from '@/components/layout/HistoryProvider'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
@@ -25,7 +26,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionProvider>
             <TooltipProvider>
-              {children}
+              <HistoryProvider>
+                {children}
+              </HistoryProvider>
               <Toaster richColors position="top-right" />
             </TooltipProvider>
           </SessionProvider>

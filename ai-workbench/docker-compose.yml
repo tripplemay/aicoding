@@ -2,6 +2,10 @@ services:
   app:
     build: .
     env_file: .env.production
+    environment:
+      DATABASE_URL: file:/data/app.db
+    volumes:
+      - sqlite_data:/data
     restart: unless-stopped
     networks:
       - internal
@@ -19,6 +23,9 @@ services:
     restart: unless-stopped
     networks:
       - internal
+
+volumes:
+  sqlite_data:
 
 networks:
   internal:

@@ -88,12 +88,26 @@ Phase 3 — Dashboard 与导航系统（完成），Phase 4 工具实现中
 - [x] nginx/nginx.conf（SSL + proxy_buffering off + 300s 超时）
 - **Status:** in_progress
 
+### Phase 7: CI/CD 自动化部署 + SQLite 数据库持久化
+- [x] `.github/workflows/deploy.yml`（push main → GitHub Actions → SSH 部署 VPS）
+- [x] `prisma/schema.prisma`（SQLite HistoryItem 模型）
+- [x] `lib/db.ts`（Prisma 单例）
+- [x] `app/api/history/route.ts`（GET / POST / DELETE，auth 校验）
+- [x] `lib/store.ts`（hydrateHistory、addHistory 异步同步 DB、persist 移除 history）
+- [x] `components/layout/HistoryProvider.tsx`（初始化时拉取历史注入 store）
+- [x] `app/layout.tsx`（嵌入 HistoryProvider）
+- [x] `docker-compose.yml`（DATABASE_URL + sqlite_data volume）
+- [x] `Dockerfile`（prisma generate + migrate deploy）
+- [x] `.env.example` / `.env.local`（添加 DATABASE_URL）
+- [x] `npm run build` 通过（0 错误 0 警告）
+- **Status:** complete
+
 ## Key Questions
 1. ✅ 是否需要用户认证？→ **需要基础认证**（NextAuth + Credentials）
 2. ✅ 部署目标？→ **VPS**（Docker + Nginx + Let's Encrypt）
 3. ✅ 视频输入方式？→ **URL 输入**（YouTube/B站，无需文件上传）
 4. ✅ 是否有 API Key？→ **已有**（ANTHROPIC_API_KEY + OPENAI_API_KEY）
-5. 数据是否持久化？→ **localStorage**（个人使用，无需数据库）
+5. 数据是否持久化？→ **SQLite + Prisma**（Phase 7 升级，历史记录持久化，跨浏览器共享）
 
 ## Decisions Made
 | Decision | Rationale |
