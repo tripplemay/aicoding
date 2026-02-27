@@ -7,6 +7,7 @@ import {
   ChevronLeft, ChevronRight,
   type LucideProps,
 } from 'lucide-react'
+import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { TOOL_CATEGORY_META, TOOL_CATEGORY_ORDER } from '@/lib/tool-manifest'
 import { FALLBACK_TOOL_ICON, TOOL_ICON_MAP } from '@/lib/tool-icons'
@@ -23,6 +24,13 @@ export function Sidebar() {
   const pathname = usePathname()
   const { sidebarOpen, setSidebarOpen } = useAppStore()
   const toolsByCategory = getEnabledToolsByCategory()
+
+  // 移动端路由切换时自动关闭侧边栏
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false)
+    }
+  }, [pathname, setSidebarOpen])
 
   const navItem = (href: string, label: string, Icon: React.FC<LucideProps>, colorClass?: string) => {
     const active = pathname === href
@@ -53,12 +61,23 @@ export function Sidebar() {
   }
 
   return (
-    <aside
-      className={cn(
-        'relative flex flex-col border-r bg-card transition-all duration-200',
-        sidebarOpen ? 'w-56' : 'w-14',
+    <>
+      {/* 移动端遮罩层 */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
-    >
+      <aside
+        className={cn(
+          'flex flex-col border-r bg-card transition-all duration-200',
+          // 移动端：固定定位，z-index 覆盖内容，translate 控制显隐
+          'fixed inset-y-0 left-0 z-30 lg:relative lg:inset-auto lg:z-auto',
+          // 移动端始终展开宽度（w-56），lg+ 恢复折叠逻辑
+          sidebarOpen ? 'w-56 translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-14',
+        )}
+      >
       {/* Logo */}
       <div className={cn('flex items-center h-14 px-3 border-b', !sidebarOpen && 'justify-center')}>
         {sidebarOpen ? (
@@ -96,8 +115,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Collapse toggle */}
-      <div className="p-2 border-t">
+      {/* Collapse toggle（仅 lg+ 显示） */}
+      <div className="hidden lg:block p-2 border-t">
         <Button
           variant="ghost"
           size="icon"
@@ -112,5 +131,6 @@ export function Sidebar() {
         </Button>
       </div>
     </aside>
+    </>
   )
 }

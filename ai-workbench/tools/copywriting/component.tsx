@@ -272,7 +272,7 @@ export function CopywritingTool() {
 
         {/* ── Generate ── */}
         <TabsContent value="generate" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[380px_1fr] gap-6">
             {/* Form */}
             <div className="space-y-4">
               <div className="space-y-1.5">
@@ -308,7 +308,7 @@ export function CopywritingTool() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label>写作风格</Label>
                   <Select value={genStyle} onValueChange={setGenStyle}>
@@ -374,7 +374,7 @@ export function CopywritingTool() {
 
         {/* ── Polish ── */}
         <TabsContent value="polish" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[380px_1fr] gap-6">
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>待润色文案 <span className="text-destructive">*</span></Label>
@@ -412,7 +412,7 @@ export function CopywritingTool() {
 
         {/* ── Rewrite ── */}
         <TabsContent value="rewrite" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[380px_1fr] gap-6">
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>待改写文案 <span className="text-destructive">*</span></Label>
@@ -450,7 +450,7 @@ export function CopywritingTool() {
 
         {/* ── Translate ── */}
         <TabsContent value="translate" className="mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[380px_1fr] gap-6">
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label>待翻译文案 <span className="text-destructive">*</span></Label>

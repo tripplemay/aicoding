@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from 'next-auth/react'
-import { LogOut, Moon, Sun, User } from 'lucide-react'
+import { LogOut, Menu, Moon, Sun, User } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useAppStore } from '@/lib/store'
 
 interface HeaderProps {
   title?: string
@@ -19,10 +20,23 @@ interface HeaderProps {
 
 export function Header({ title = 'AI 工作台', username = 'Admin' }: HeaderProps) {
   const { theme, setTheme } = useTheme()
+  const { setSidebarOpen, sidebarOpen } = useAppStore()
 
   return (
-    <header className="flex items-center justify-between h-14 px-6 border-b bg-card">
-      <h1 className="text-sm font-semibold text-foreground">{title}</h1>
+    <header className="flex items-center justify-between h-14 px-4 lg:px-6 border-b bg-card">
+      <div className="flex items-center gap-2">
+        {/* 汉堡菜单，仅 lg 以下显示 */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 lg:hidden"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          <Menu className="h-4 w-4" />
+          <span className="sr-only">打开菜单</span>
+        </Button>
+        <h1 className="text-sm font-semibold text-foreground">{title}</h1>
+      </div>
       <div className="flex items-center gap-1">
         <Button
           variant="ghost"

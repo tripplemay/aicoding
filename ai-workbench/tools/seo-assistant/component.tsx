@@ -94,7 +94,7 @@ export function SeoAssistantTool() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[380px_1fr] gap-6 max-w-6xl mx-auto">
       <div className="space-y-4">
         <div className="space-y-1.5">
           <Label>生成模式</Label>
@@ -138,7 +138,7 @@ export function SeoAssistantTool() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label>搜索意图</Label>
             <Select value={intent} onValueChange={(v) => setIntent(v as SeoIntent)}>
@@ -163,7 +163,7 @@ export function SeoAssistantTool() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label>语言</Label>
             <Input value={language} onChange={(e) => setLanguage(e.target.value)} />

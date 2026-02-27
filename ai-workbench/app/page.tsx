@@ -17,7 +17,7 @@ export default async function DashboardPage() {
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
         <Header username={session?.user?.name ?? 'Admin'} />
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
           <div className="max-w-5xl mx-auto">
             <div className="mb-8">
               <h2 className="text-2xl font-bold tracking-tight">欢迎回来 👋</h2>

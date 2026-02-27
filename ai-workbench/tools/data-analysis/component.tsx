@@ -47,7 +47,7 @@ function UploadZone({ onFile }: { onFile: (file: File) => void }) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-10 cursor-pointer transition-colors',
+        'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-6 md:p-10 cursor-pointer transition-colors',
         dragging ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/30',
       )}
       onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
@@ -434,7 +434,7 @@ export function DataAnalysisTool() {
 
       {/* ── Main work area ── */}
       {hasData && (
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[380px_1fr] gap-6">
 
           {/* Left: Controls */}
           <div className="space-y-4">
