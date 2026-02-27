@@ -39,18 +39,10 @@ jobs:
           mkdir -p ~/.ssh
           python3 -c "
           import os, stat
-          key = os.environ['SSH_KEY']
-          lines = key.split('\n')
-          print(f'[debug] line count: {len(lines)}, total chars: {len(key)}')
-          print(f'[debug] first 30 chars: {repr(key[:30])}')
-          # Rebuild key with proper newlines if stored as single line
-          if len(lines) < 5:
-              key = key.replace(' ', '\n')
-          key = key.strip() + '\n'
+          key = os.environ['SSH_KEY'].strip() + '\n'
           path = os.path.expanduser('~/.ssh/deploy_key')
           open(path, 'w').write(key)
           os.chmod(path, 0o600)
-          print(f'[debug] wrote {len(key.splitlines())} lines to key file')
           "
           ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" \
