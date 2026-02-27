@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { auth } from '@/auth'
+import { isToolEnabled } from '@/lib/tool-manifest'
 import { getToolById } from '@/lib/tool-registry'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Header } from '@/components/layout/Header'
@@ -12,7 +13,7 @@ export default async function ToolPage({ params }: Props) {
   const { toolId } = await params
   const tool = getToolById(toolId)
 
-  if (!tool || !tool.enabled) {
+  if (!tool || !isToolEnabled(tool)) {
     notFound()
   }
 

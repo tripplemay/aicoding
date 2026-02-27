@@ -1,23 +1,12 @@
 import Link from 'next/link'
 import { auth } from '@/auth'
 import { getEnabledTools } from '@/lib/tool-registry'
+import { TOOL_CATEGORY_META } from '@/lib/tool-manifest'
+import { FALLBACK_TOOL_ICON, TOOL_ICON_MAP } from '@/lib/tool-icons'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Header } from '@/components/layout/Header'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  PenLine, BarChart2, Video,
-  type LucideProps,
-} from 'lucide-react'
-
-const ICON_MAP: Record<string, React.FC<LucideProps>> = { PenLine, BarChart2, Video }
-
-const COLOR_MAP: Record<string, string> = {
-  writing: 'text-violet-500 bg-violet-500/10',
-  analysis: 'text-emerald-500 bg-emerald-500/10',
-  media: 'text-rose-500 bg-rose-500/10',
-  custom: 'text-blue-500 bg-blue-500/10',
-}
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -37,8 +26,9 @@ export default async function DashboardPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {tools.map((tool) => {
-                const Icon = ICON_MAP[tool.icon] ?? PenLine
-                const colorClass = COLOR_MAP[tool.category] ?? COLOR_MAP.custom
+                const Icon = TOOL_ICON_MAP[tool.icon] ?? FALLBACK_TOOL_ICON
+                const categoryMeta = TOOL_CATEGORY_META[tool.category] ?? TOOL_CATEGORY_META.custom
+                const colorClass = `${categoryMeta.textClass} ${categoryMeta.bgClass}`
                 return (
                   <Link key={tool.id} href={tool.route}>
                     <Card className="h-full cursor-pointer hover:shadow-md transition-shadow hover:border-primary/40">

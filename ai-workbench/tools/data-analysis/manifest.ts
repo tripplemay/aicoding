@@ -1,4 +1,4 @@
-import { ToolManifest } from '@/types/tool'
+import { ToolManifest } from '@/lib/tool-manifest'
 import { DataAnalysisTool } from './component'
 
 export const dataAnalysisTool: ToolManifest = {

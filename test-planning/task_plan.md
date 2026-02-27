@@ -72,11 +72,11 @@ Phase 3 — Dashboard 与导航系统（完成），Phase 4 工具实现中
 - **Status:** complete
 
 ### Phase 5: 插件扩展系统
-- [ ] 工具配置文件格式定义（tool-manifest.ts）
-- [ ] 一键注册新工具的脚手架脚本
-- [ ] 工具分类与标签系统
-- [ ] 工具开关（启用/禁用）
-- **Status:** pending
+- [x] 工具配置文件格式定义（tool-manifest.ts）
+- [x] 一键注册新工具的脚手架脚本
+- [x] 工具分类与标签系统
+- [x] 工具开关（启用/禁用）
+- **Status:** complete
 
 ### Phase 6: 测试与打磨
 - [ ] 各工具功能验证

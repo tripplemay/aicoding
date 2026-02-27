@@ -3,12 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  PenLine, BarChart2, Video, LayoutDashboard,
+  LayoutDashboard,
   ChevronLeft, ChevronRight,
   type LucideProps,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getEnabledTools } from '@/lib/tool-registry'
+import { TOOL_CATEGORY_META, TOOL_CATEGORY_ORDER } from '@/lib/tool-manifest'
+import { FALLBACK_TOOL_ICON, TOOL_ICON_MAP } from '@/lib/tool-icons'
+import { getEnabledToolsByCategory } from '@/lib/tool-registry'
 import { useAppStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,24 +19,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-// Map of icon names used in manifests to actual Lucide components
-const ICON_MAP: Record<string, React.FC<LucideProps>> = {
-  PenLine,
-  BarChart2,
-  Video,
-}
-
-const CATEGORY_COLORS: Record<string, string> = {
-  writing: 'text-violet-500',
-  analysis: 'text-emerald-500',
-  media: 'text-rose-500',
-  custom: 'text-blue-500',
-}
-
 export function Sidebar() {
   const pathname = usePathname()
   const { sidebarOpen, setSidebarOpen } = useAppStore()
-  const tools = getEnabledTools()
+  const toolsByCategory = getEnabledToolsByCategory()
 
   const navItem = (href: string, label: string, Icon: React.FC<LucideProps>, colorClass?: string) => {
     const active = pathname === href
@@ -84,17 +72,27 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
         {navItem('/', '工作台', LayoutDashboard)}
 
-        {sidebarOpen && (
-          <p className="px-3 pt-4 pb-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            工具
-          </p>
-        )}
-        {!sidebarOpen && <div className="my-1 border-t" />}
+        {TOOL_CATEGORY_ORDER.map((category) => {
+          const tools = toolsByCategory[category] ?? []
+          if (tools.length === 0) return null
 
-        {tools.map((tool) => {
-          const Icon = ICON_MAP[tool.icon] ?? PenLine
-          const colorClass = CATEGORY_COLORS[tool.category]
-          return navItem(tool.route, tool.name, Icon, colorClass)
+          const categoryMeta = TOOL_CATEGORY_META[category]
+          return (
+            <div key={category}>
+              {sidebarOpen ? (
+                <p className="px-3 pt-4 pb-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  {categoryMeta.label}
+                </p>
+              ) : (
+                <div className="my-1 border-t" />
+              )}
+
+              {tools.map((tool) => {
+                const Icon = TOOL_ICON_MAP[tool.icon] ?? FALLBACK_TOOL_ICON
+                return navItem(tool.route, tool.name, Icon, categoryMeta.textClass)
+              })}
+            </div>
+          )
         })}
       </nav>
 
