@@ -33,7 +33,4 @@ export default async function ToolPage({ params }: Props) {
   )
 }
 
-export async function generateStaticParams() {
-  // Allow dynamic params at runtime (for plugin extensibility)
-  return []
-}
+export const dynamic = 'force-dynamic'
