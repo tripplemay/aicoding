@@ -29,22 +29,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Decode SSH key
+      - name: Deploy via SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
         run: |
-          echo "${{ secrets.VPS_SSH_KEY }}" | base64 -d > /tmp/deploy_key
-          chmod 600 /tmp/deploy_key
-
-      - name: SSH Deploy
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key_path: /tmp/deploy_key
-          port: 22
-          script: |
-            cd ${{ secrets.VPS_DEPLOY_PATH }}
-            git pull origin main
-            cd ai-workbench
-            docker compose down
-            docker compose up --build -d
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key "$VPS_USER@$VPS_HOST" "
+            cd $VPS_DEPLOY_PATH &&
+            git pull origin main &&
+            cd ai-workbench &&
+            docker compose down &&
+            docker compose up --build -d &&
             docker system prune -f
+          "
