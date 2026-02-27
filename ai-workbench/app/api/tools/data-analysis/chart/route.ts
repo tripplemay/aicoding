@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { auth } from '@/auth'
-import { anthropic, DEFAULT_MODEL } from '@/lib/claude'
+import { openrouter, DEFAULT_MODEL } from '@/lib/claude'
 
 export interface ChartConfig {
   type: 'bar' | 'line' | 'pie' | 'area'
@@ -70,17 +70,18 @@ export async function POST(req: NextRequest) {
     .join('\n')
 
   try {
-    const response = await anthropic.messages.create({
+    const response = await openrouter.chat.completions.create({
       model: DEFAULT_MODEL,
       max_tokens: 1024,
-      system: SYSTEM,
-      messages: [{ role: 'user', content: userMsg }],
+      messages: [
+        { role: 'system', content: SYSTEM },
+        { role: 'user', content: userMsg },
+      ],
     })
 
-    const raw =
-      response.content[0].type === 'text' ? response.content[0].text.trim() : ''
+    const raw = response.choices[0]?.message?.content?.trim() ?? ''
 
-    // Strip code fences if Claude added them
+    // Strip code fences if the model added them
     const cleaned = raw.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim()
 
     let config: ChartConfig

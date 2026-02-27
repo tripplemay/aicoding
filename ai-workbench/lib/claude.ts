@@ -1,35 +1,51 @@
-import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 
-export const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+// OpenRouter is OpenAI-API-compatible — just swap baseURL and key
+export const openrouter = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    'HTTP-Referer': process.env.NEXTAUTH_URL ?? 'http://localhost:3000',
+    'X-Title': 'AI Workbench',
+  },
 })
 
-export const DEFAULT_MODEL = 'claude-opus-4-6'
+export type ChatMessage = OpenAI.Chat.ChatCompletionMessageParam
 
-/** Stream Claude response as a ReadableStream for SSE */
+export const DEFAULT_MODEL =
+  process.env.OPENROUTER_MODEL ?? 'anthropic/claude-opus-4'
+
+/** Stream a chat response via OpenRouter as SSE */
 export function createStreamResponse(
-  messages: Anthropic.MessageParam[],
+  messages: ChatMessage[],
   system?: string,
   model = DEFAULT_MODEL,
   maxTokens = 4096,
 ): Response {
+  // OpenAI format: system prompt goes as first message with role='system'
+  const allMessages: ChatMessage[] = [
+    ...(system ? [{ role: 'system' as const, content: system }] : []),
+    ...messages,
+  ]
+
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const anthropicStream = anthropic.messages.stream({
+        const completion = await openrouter.chat.completions.create({
           model,
           max_tokens: maxTokens,
-          system,
-          messages,
+          messages: allMessages,
+          stream: true,
         })
 
-        for await (const event of anthropicStream) {
-          if (
-            event.type === 'content_block_delta' &&
-            event.delta.type === 'text_delta'
-          ) {
-            const data = `data: ${JSON.stringify({ text: event.delta.text })}\n\n`
-            controller.enqueue(new TextEncoder().encode(data))
+        for await (const chunk of completion) {
+          const text = chunk.choices[0]?.delta?.content ?? ''
+          if (text) {
+            controller.enqueue(
+              new TextEncoder().encode(
+                `data: ${JSON.stringify({ text })}\n\n`,
+              ),
+            )
           }
         }
 
@@ -38,7 +54,9 @@ export function createStreamResponse(
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Unknown error'
         controller.enqueue(
-          new TextEncoder().encode(`data: ${JSON.stringify({ error: msg })}\n\n`),
+          new TextEncoder().encode(
+            `data: ${JSON.stringify({ error: msg })}\n\n`,
+          ),
         )
         controller.close()
       }

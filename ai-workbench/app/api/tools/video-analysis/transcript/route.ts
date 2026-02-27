@@ -89,11 +89,14 @@ async function fetchViaWhisper(url: string): Promise<string> {
       throw new Error('yt-dlp did not produce audio file. Is ffmpeg installed?')
     }
 
-    // Whisper transcription
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    // Whisper transcription — configurable endpoint (default: Groq free API)
+    const whisperKey = process.env.WHISPER_API_KEY ?? process.env.OPENAI_API_KEY
+    const whisperBase = process.env.WHISPER_BASE_URL ?? 'https://api.groq.com/openai/v1'
+    const whisperModel = process.env.WHISPER_MODEL ?? 'whisper-large-v3'
+    const openai = new OpenAI({ apiKey: whisperKey, baseURL: whisperBase })
     const result = await openai.audio.transcriptions.create({
       file: createReadStream(audioPath),
-      model: 'whisper-1',
+      model: whisperModel,
       response_format: 'text',
     })
 
